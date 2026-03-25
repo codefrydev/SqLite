@@ -32,8 +32,11 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/addon/hint/show-hint.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/codemirror.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/mode/sql/sql.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/addon/hint/show-hint.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/addon/hint/sql-hint.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/theme/idea.min.css">
 
     <link rel="stylesheet" href="css/styles.css">
@@ -85,7 +88,17 @@
                 </div>
             </div>
 
-            <div class="p-4 overflow-y-auto flex-1 text-sm" id="schema-container" role="tabpanel" aria-labelledby="tab-schema-btn" aria-hidden="false"></div>
+            <div class="flex flex-col flex-1 min-h-0 overflow-hidden" id="schema-container" role="tabpanel" aria-labelledby="tab-schema-btn" aria-hidden="false">
+                <div class="px-3 pt-2 pb-1.5 border-b border-slate-200 shrink-0 flex gap-1 bg-slate-50/80" role="tablist" aria-label="Schema view">
+                    <button id="schema-subtab-list" type="button" role="tab" aria-selected="true" aria-controls="schema-list-panel" class="schema-subtab flex-1 py-1.5 text-xs font-medium rounded-md text-slate-500 hover:text-slate-700 transition-all schema-subtab-active">
+                        <i class="fas fa-list-ul mr-1 opacity-70" aria-hidden="true"></i>List
+                    </button>
+                    <button id="schema-subtab-diagram" type="button" role="tab" aria-selected="false" aria-controls="main-diagram-workspace" class="schema-subtab flex-1 py-1.5 text-xs font-medium rounded-md text-slate-500 hover:text-slate-700 transition-all">
+                        <i class="fas fa-project-diagram mr-1 opacity-70" aria-hidden="true"></i>Diagram
+                    </button>
+                </div>
+                <div id="schema-list-panel" class="flex-1 overflow-y-auto min-h-0 p-4 text-sm" role="tabpanel" aria-labelledby="schema-subtab-list"></div>
+            </div>
 
             <div class="hidden flex-col flex-1 overflow-hidden" id="practice-tab-wrapper" role="tabpanel" aria-labelledby="tab-practice-btn" aria-hidden="true">
                 <div class="p-4 border-b border-slate-100 shrink-0 space-y-3 bg-white">
@@ -113,9 +126,33 @@
             </div>
         </aside>
 
-        <section class="flex-1 flex flex-col min-w-0 bg-slate-50" aria-label="SQL workspace">
+        <section class="flex-1 flex flex-col min-w-0 min-h-0 bg-slate-50 relative" aria-label="SQL workspace">
 
-            <div class="flex-1 flex flex-col min-h-0 border-b border-slate-200 bg-white m-4 mb-2 rounded-xl shadow-sm border overflow-hidden relative">
+            <div id="main-diagram-workspace" class="hidden flex-1 flex flex-col min-h-0 mx-4 my-4 overflow-hidden bg-white rounded-xl shadow-sm border border-slate-200" role="region" aria-labelledby="diagram-workspace-heading" aria-hidden="true">
+                <div class="px-4 py-2.5 bg-slate-50 border-b border-slate-200 shrink-0 flex flex-wrap gap-2 justify-between items-center gap-y-2">
+                    <div class="flex items-center text-slate-700 min-w-0">
+                        <i class="fas fa-project-diagram text-indigo-400 mr-2 text-sm shrink-0" aria-hidden="true"></i>
+                        <h2 id="diagram-workspace-heading" class="text-sm font-semibold truncate">Schema diagram</h2>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2 sm:gap-3 w-full sm:w-auto justify-end">
+                        <p class="text-[11px] text-slate-400 leading-snug order-last sm:order-none flex-1 sm:flex-none text-right sm:text-left min-w-0">Drag to pan · scroll or pinch to zoom · foreign keys from SQLite</p>
+                        <div class="flex items-center rounded-lg border border-slate-200 bg-white shadow-sm overflow-hidden shrink-0" role="group" aria-label="Diagram zoom">
+                            <button type="button" id="diagram-zoom-out" class="diagram-zoom-btn px-2.5 py-1.5 text-sm font-medium text-slate-600 hover:bg-slate-50" title="Zoom out" aria-label="Zoom out">−</button>
+                            <button type="button" id="diagram-zoom-reset" class="diagram-zoom-btn px-2.5 py-1.5 text-xs font-medium text-slate-600 hover:bg-slate-50 border-l border-r border-slate-200 min-w-[3.25rem]" title="Fit diagram to view" aria-label="Fit diagram to view">Fit</button>
+                            <button type="button" id="diagram-zoom-in" class="diagram-zoom-btn px-2.5 py-1.5 text-sm font-medium text-slate-600 hover:bg-slate-50" title="Zoom in" aria-label="Zoom in">+</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="schema-diagram-viewport" class="schema-diagram-viewport flex-1 min-h-0 overflow-hidden relative bg-slate-50/60 outline-none" tabindex="0" aria-label="Pan and zoom the schema diagram. Drag to move, scroll to zoom, or use the zoom buttons." role="application">
+                    <div id="schema-diagram-pan-layer" class="schema-diagram-pan-layer">
+                        <div id="schema-diagram-mount" class="p-3 md:p-4"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="sql-split-root" class="flex-1 flex flex-col min-h-0 mx-4 my-4 gap-1 min-w-0">
+
+            <div id="sql-editor-panel" class="flex flex-col min-h-[120px] border-b border-slate-200 bg-white rounded-xl shadow-sm border overflow-hidden relative" style="flex: 0 0 45%;">
 
                 <div class="px-4 py-3 bg-white border-b border-slate-100 flex flex-wrap gap-2 justify-between items-center shrink-0">
                     <div class="flex items-center text-slate-700">
@@ -124,6 +161,7 @@
                     </div>
                     <div class="flex items-center flex-wrap gap-2 sm:gap-3" role="group" aria-labelledby="editor-toolbar-label">
                         <span class="text-xs text-slate-400 font-mono hidden sm:inline-block border border-slate-200 rounded px-2 py-0.5" title="Run query">Ctrl + Enter</span>
+                        <span class="text-xs text-slate-400 font-mono hidden md:inline-block border border-slate-200 rounded px-2 py-0.5" title="Autocomplete tables, columns, and SQL keywords">Ctrl + Space</span>
                         <button type="button" id="check-answer-btn" disabled class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-1.5 rounded-lg text-sm font-medium transition-all shadow-sm shadow-emerald-200/50 disabled:opacity-45 disabled:cursor-not-allowed disabled:shadow-none flex items-center" aria-label="Check answer against the active challenge">
                             <i class="fas fa-check-double text-xs mr-2" aria-hidden="true"></i> Check answer
                         </button>
@@ -154,7 +192,11 @@
                 </div>
             </div>
 
-            <div class="flex-1 flex flex-col min-h-0 bg-white m-4 mt-2 rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <div id="editor-resize-handle" class="shrink-0 h-2 flex items-center justify-center cursor-ns-resize select-none group rounded-md hover:bg-slate-200/60 transition-colors" role="separator" aria-orientation="horizontal" aria-label="Drag to resize SQL editor and results" tabindex="0">
+                <span class="h-1 w-14 rounded-full bg-slate-300 group-hover:bg-indigo-400 transition-colors" aria-hidden="true"></span>
+            </div>
+
+            <div id="results-panel" class="flex-1 flex flex-col min-h-0 bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                 <div class="px-4 py-2.5 bg-slate-50 border-b border-slate-200 flex justify-between items-center shrink-0">
                     <div class="flex items-center text-slate-700">
                         <i class="fas fa-table text-slate-400 mr-2 text-sm" aria-hidden="true"></i>
@@ -175,9 +217,12 @@
                 </div>
             </div>
 
+            </div>
+
         </section>
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
     <script src="js/practice-data.js"></script>
     <script src="js/seo.js"></script>
     <script src="js/app.js"></script>

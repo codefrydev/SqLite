@@ -77,6 +77,35 @@ td { color: #334155; }
     color: #cbd5e1;
 }
 
+/* SQL autocomplete (CodeMirror show-hint) */
+.CodeMirror-hints {
+    z-index: 100;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    max-height: 14rem;
+    border-radius: 0.5rem;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.12), 0 4px 10px -4px rgba(15, 23, 42, 0.08);
+    background: #fff;
+}
+.CodeMirror-hint {
+    padding: 0.35rem 0.65rem;
+}
+.CodeMirror-hint-active {
+    background: #e0e7ff;
+    color: #1e1b4b;
+}
+.CodeMirror-hint-keyword {
+    color: #7c3aed;
+    font-weight: 600;
+}
+.CodeMirror-hint-table {
+    color: #0d9488;
+}
+.CodeMirror-hint-default-table {
+    font-weight: 600;
+}
+
 .transition-all { transition-property: all; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 200ms; }
 
 @keyframes scorePulse {
@@ -84,3 +113,41 @@ td { color: #334155; }
     50% { transform: scale(1.04); }
 }
 .score-updated { animation: scorePulse 0.5s ease; }
+
+/* Schema ER diagram (Mermaid) */
+.schema-subtab.schema-subtab-active {
+    background-color: white;
+    color: #0f172a;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+    font-weight: 600;
+}
+.schema-diagram-viewport {
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+}
+.schema-diagram-viewport.schema-diagram-dragging {
+    cursor: grabbing;
+}
+/* No will-change here — it promotes the layer to a raster that blurs when scaled. */
+.schema-diagram-pan-layer {
+    transform-origin: 0 0;
+    backface-visibility: hidden;
+}
+.schema-diagram-viewport .mermaid {
+    margin: 0 auto;
+}
+.schema-diagram-viewport svg {
+    max-width: none;
+    height: auto;
+    /* Keep vector edges and text sharp under CSS transform scale */
+    shape-rendering: geometricPrecision;
+    text-rendering: geometricPrecision;
+    -webkit-font-smoothing: antialiased;
+}
+.diagram-zoom-btn:focus-visible {
+    outline: 2px solid #818cf8;
+    outline-offset: 0;
+    z-index: 1;
+}
