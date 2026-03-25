@@ -3,557 +3,183 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Northwind SQL Academy</title>
-    
-    <!-- Fonts: Inter (UI) and JetBrains Mono (Code) -->
+    <title>Northwind SQL Academy — Learn SQL in the Browser</title>
+    <meta name="description" content="Free interactive SQL course: practice SELECT, JOINs, and window functions on the Northwind database in your browser. Scored challenges, instant results, no install.">
+    <meta name="keywords" content="SQL, SQLite, learn SQL, Northwind, SQL tutorial, interactive SQL, SQL practice, browser SQL">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#0f172a">
+    <link rel="canonical" id="canonical-url" href="">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Northwind SQL Academy — Learn SQL in the Browser">
+    <meta property="og:description" content="Free interactive SQL practice on the classic Northwind database. Run queries in SQLite (SQL.js), earn points, and master joins to window functions.">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:url" content="">
+    <meta property="og:site_name" content="Northwind SQL Academy">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Northwind SQL Academy — Learn SQL in the Browser">
+    <meta name="twitter:description" content="Interactive SQL challenges on Northwind. Practice in your browser with instant feedback and scoring.">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    
-    <!-- Tailwind CSS -->
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- SQL.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
-    
-    <!-- FontAwesome -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    
-    <!-- CodeMirror Assets -->
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/codemirror.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/codemirror.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/mode/sql/sql.min.js"></script>
-    <!-- Optional: a clean CodeMirror theme -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/theme/idea.min.css">
 
-    <style>
-        body { 
-            font-family: 'Inter', -apple-system, sans-serif; 
-            background-color: #f8fafc; /* slate-50 */
-        }
-        
-        /* Premium Scrollbars */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-
-        /* Data Grid Table Styling */
-        .table-container { overflow: auto; }
-        table { border-collapse: separate; border-spacing: 0; width: 100%; font-size: 0.875rem; }
-        th, td { 
-            padding: 0.75rem 1rem; 
-            text-align: left; 
-            border-bottom: 1px solid #e2e8f0;
-            white-space: nowrap;
-        }
-        th { 
-            background-color: #f8fafc; 
-            font-weight: 600; 
-            color: #64748b; 
-            text-transform: uppercase; 
-            font-size: 0.75rem; 
-            letter-spacing: 0.05em;
-            position: sticky; 
-            top: 0; 
-            z-index: 10;
-            border-bottom: 2px solid #e2e8f0;
-        }
-        tr:hover td { background-color: #f1f5f9; }
-        td { color: #334155; }
-
-        /* Segmented Control Tabs */
-        .tab-active { 
-            background-color: white !important; 
-            color: #0f172a !important; /* slate-900 */
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            font-weight: 600;
-        }
-
-        /* CodeMirror Customization */
-        .CodeMirror {
-            flex: 1;
-            height: auto !important;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 14px;
-            background: transparent;
-            padding: 0.5rem 0;
-            line-height: 1.6;
-        }
-        .CodeMirror-gutters {
-            background-color: transparent;
-            border-right: none;
-            padding-right: 10px;
-        }
-        .CodeMirror-linenumber {
-            color: #cbd5e1;
-        }
-        
-        /* Smooth transitions */
-        .transition-all { transition-property: all; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 200ms; }
-    </style>
+    <link rel="stylesheet" href="css/styles.css">
 </head>
-<body class="h-screen flex flex-col overflow-hidden text-slate-800">
+<body class="h-screen flex flex-col overflow-hidden text-slate-800 bg-slate-50">
 
-    <!-- App Header -->
-    <header class="bg-slate-900 text-white px-6 py-3 flex justify-between items-center shrink-0 border-b border-slate-800 shadow-sm z-20">
-        <div class="flex items-center space-x-3">
-            <div class="w-8 h-8 rounded-lg bg-indigo-500 flex items-center justify-center shadow-inner">
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <header class="bg-gradient-to-r from-slate-900 via-slate-900 to-slate-800 text-white px-4 sm:px-6 py-3 flex flex-wrap gap-3 justify-between items-center shrink-0 border-b border-slate-800/80 shadow-md z-20" role="banner" aria-label="Northwind SQL Academy">
+        <div class="flex items-center space-x-3 min-w-0">
+            <div class="w-9 h-9 rounded-xl bg-indigo-500 flex items-center justify-center shadow-lg shadow-indigo-900/40 ring-1 ring-white/10" aria-hidden="true">
                 <i class="fas fa-database text-white text-sm"></i>
             </div>
-            <h1 class="text-lg font-semibold tracking-tight">Northwind SQL Academy</h1>
+            <div class="min-w-0">
+                <p class="text-base sm:text-lg font-semibold tracking-tight truncate">Northwind SQL Academy</p>
+                <p class="text-[10px] sm:text-xs text-slate-400 font-medium hidden sm:block">Learn SQL on the classic Northwind database</p>
+            </div>
         </div>
-        <div id="status" class="text-xs font-medium bg-slate-800 border border-slate-700 text-slate-300 px-3 py-1.5 rounded-full flex items-center space-x-2 transition-colors">
-            <i class="fas fa-circle-notch fa-spin text-indigo-400"></i>
-            <span>Loading Engine...</span>
+        <div class="flex items-center gap-2 sm:gap-4 flex-wrap justify-end">
+            <div id="header-score" class="flex items-center gap-2 text-xs font-medium bg-slate-800/90 border border-slate-600/50 rounded-full px-3 py-1.5" aria-live="polite" aria-atomic="true">
+                <span class="text-amber-300/90"><i class="fas fa-trophy mr-1" aria-hidden="true"></i><span id="score-value">0</span> pts</span>
+                <span class="text-slate-500" aria-hidden="true">·</span>
+                <span class="text-slate-300"><span id="completed-count">0</span>/<span id="total-questions">0</span> completed</span>
+            </div>
+            <button type="button" id="reset-progress-btn" class="text-xs font-medium text-slate-400 hover:text-rose-300 border border-slate-600/50 hover:border-rose-500/40 rounded-full px-3 py-1.5 transition-colors" aria-label="Reset all score and completed challenges">
+                Reset progress
+            </button>
+            <div id="status" class="text-xs font-medium bg-slate-800 border border-slate-700 text-slate-300 px-3 py-1.5 rounded-full flex items-center space-x-2 transition-colors" role="status" aria-live="polite" aria-atomic="true">
+                <i class="fas fa-circle-notch fa-spin text-indigo-400" aria-hidden="true"></i>
+                <span>Loading Engine...</span>
+            </div>
         </div>
     </header>
 
-    <!-- Main Layout -->
-    <main class="flex-1 flex flex-col md:flex-row overflow-hidden">
-        
-        <!-- Sidebar -->
-        <aside class="w-full md:w-[340px] bg-white border-r border-slate-200 flex flex-col shrink-0 z-10 shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
-            
-            <!-- Segmented Tabs -->
-            <div class="p-3 bg-slate-50 border-b border-slate-200 shrink-0">
+    <main id="main-content" class="flex-1 flex flex-col md:flex-row overflow-hidden min-h-0 min-w-0" tabindex="-1">
+
+        <h1 class="sr-only">Northwind SQL Academy — SQL editor, schema browser, and practice challenges</h1>
+
+        <aside class="w-full md:w-[360px] bg-white border-r border-slate-200 flex flex-col shrink-0 z-10 shadow-[4px_0_24px_rgba(0,0,0,0.02)]" aria-label="Schema and practice">
+
+            <div class="p-3 bg-slate-50 border-b border-slate-200 shrink-0" role="tablist" aria-label="Sidebar view">
                 <div class="flex bg-slate-200/60 p-1 rounded-lg">
-                    <button id="tab-schema-btn" class="flex-1 py-1.5 text-sm rounded-md text-slate-500 hover:text-slate-700 transition-all tab-active">
-                        <i class="fas fa-sitemap mr-1.5 opacity-70"></i>Schema
+                    <button id="tab-schema-btn" type="button" role="tab" aria-selected="true" aria-controls="schema-container" class="flex-1 py-1.5 text-sm rounded-md text-slate-500 hover:text-slate-700 transition-all tab-active">
+                        <i class="fas fa-sitemap mr-1.5 opacity-70" aria-hidden="true"></i>Schema
                     </button>
-                    <button id="tab-practice-btn" class="flex-1 py-1.5 text-sm rounded-md text-slate-500 hover:text-slate-700 transition-all">
-                        <i class="fas fa-tasks mr-1.5 opacity-70"></i>Practice
+                    <button id="tab-practice-btn" type="button" role="tab" aria-selected="false" aria-controls="practice-tab-wrapper" class="flex-1 py-1.5 text-sm rounded-md text-slate-500 hover:text-slate-700 transition-all">
+                        <i class="fas fa-tasks mr-1.5 opacity-70" aria-hidden="true"></i>Practice
                     </button>
                 </div>
             </div>
 
-            <!-- Tab Content: Schema -->
-            <div class="p-4 overflow-y-auto flex-1 text-sm" id="schema-container">
-                <!-- Schema injected here -->
-            </div>
+            <div class="p-4 overflow-y-auto flex-1 text-sm" id="schema-container" role="tabpanel" aria-labelledby="tab-schema-btn" aria-hidden="false"></div>
 
-            <!-- Tab Content: Practice Sets -->
-            <div class="hidden flex-col flex-1 overflow-hidden" id="practice-tab-wrapper">
+            <div class="hidden flex-col flex-1 overflow-hidden" id="practice-tab-wrapper" role="tabpanel" aria-labelledby="tab-practice-btn" aria-hidden="true">
                 <div class="p-4 border-b border-slate-100 shrink-0 space-y-3 bg-white">
                     <div class="relative">
-                        <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                        <input type="text" id="practice-search" placeholder="Search challenges..." class="w-full pl-9 pr-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all placeholder-slate-400">
+                        <label for="practice-search" class="sr-only">Search challenges</label>
+                        <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none" aria-hidden="true"></i>
+                        <input type="search" id="practice-search" name="practice-search" autocomplete="off" placeholder="Search challenges..." class="w-full pl-9 pr-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 transition-all placeholder-slate-400">
                     </div>
-                    <select id="practice-diff-filter" class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all cursor-pointer text-slate-600 appearance-none">
-                        <option value="All">All Difficulties</option>
-                        <option value="Easy">🟢 Easy</option>
-                        <option value="Medium">🟡 Medium</option>
-                        <option value="Hard">🔴 Hard</option>
-                        <option value="Super Hard">🟣 Super Hard</option>
+                    <div>
+                        <label for="practice-diff-filter" class="sr-only">Filter by difficulty</label>
+                        <select id="practice-diff-filter" name="difficulty" class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 transition-all cursor-pointer text-slate-600 appearance-none">
+                            <option value="All">All Difficulties</option>
+                            <option value="Easy">Easy</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Hard">Hard</option>
+                            <option value="Super Ultra">Super Ultra</option>
+                            <option value="Super Ultra Hard">Super Ultra Hard</option>
+                            <option value="Super Ultra Hard Max">Super Ultra Hard Max</option>
+                        <option value="Super Ultra Hard Max Pro">Super Ultra Hard Max Pro</option>
+                        <option value="Super Ultra Hard Max Pro God">Super Ultra Hard Max Pro God</option>
                     </select>
+                    </div>
                 </div>
-                <div class="p-2 overflow-y-auto flex-1 bg-slate-50 space-y-2" id="practice-container">
-                    <!-- Questions injected here -->
-                </div>
+                <div class="p-2 overflow-y-auto flex-1 bg-slate-50 space-y-2 min-h-0" id="practice-container" role="list" aria-label="Practice challenges"></div>
             </div>
         </aside>
 
-        <!-- Main Workspace (Editor + Results) -->
-        <section class="flex-1 flex flex-col min-w-0 bg-slate-50">
-            
-            <!-- Editor Top Half -->
+        <section class="flex-1 flex flex-col min-w-0 bg-slate-50" aria-label="SQL workspace">
+
             <div class="flex-1 flex flex-col min-h-0 border-b border-slate-200 bg-white m-4 mb-2 rounded-xl shadow-sm border overflow-hidden relative">
-                
-                <!-- Editor Toolbar -->
-                <div class="px-4 py-3 bg-white border-b border-slate-100 flex justify-between items-center shrink-0">
+
+                <div class="px-4 py-3 bg-white border-b border-slate-100 flex flex-wrap gap-2 justify-between items-center shrink-0">
                     <div class="flex items-center text-slate-700">
-                        <i class="fas fa-terminal text-slate-400 mr-2"></i>
-                        <span class="text-sm font-semibold">SQL Query</span>
+                        <i class="fas fa-terminal text-slate-400 mr-2" aria-hidden="true"></i>
+                        <span class="text-sm font-semibold" id="editor-toolbar-label">SQL Query</span>
                     </div>
-                    <div class="flex items-center space-x-3">
-                        <span class="text-xs text-slate-400 font-mono hidden sm:inline-block border border-slate-200 rounded px-2 py-0.5">Ctrl + Enter</span>
-                        <button id="run-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-1.5 rounded-lg text-sm font-medium transition-all shadow-sm shadow-indigo-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center">
-                            <i class="fas fa-play text-xs mr-2"></i> Run
+                    <div class="flex items-center flex-wrap gap-2 sm:gap-3" role="group" aria-labelledby="editor-toolbar-label">
+                        <span class="text-xs text-slate-400 font-mono hidden sm:inline-block border border-slate-200 rounded px-2 py-0.5" title="Run query">Ctrl + Enter</span>
+                        <button type="button" id="check-answer-btn" disabled class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-1.5 rounded-lg text-sm font-medium transition-all shadow-sm shadow-emerald-200/50 disabled:opacity-45 disabled:cursor-not-allowed disabled:shadow-none flex items-center" aria-label="Check answer against the active challenge">
+                            <i class="fas fa-check-double text-xs mr-2" aria-hidden="true"></i> Check answer
+                        </button>
+                        <button type="button" id="run-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-1.5 rounded-lg text-sm font-medium transition-all shadow-sm shadow-indigo-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center" aria-label="Run SQL query">
+                            <i class="fas fa-play text-xs mr-2" aria-hidden="true"></i> Run
                         </button>
                     </div>
                 </div>
 
-                <!-- Active Question Banner -->
-                <div id="active-question-panel" class="hidden bg-indigo-50/50 border-b border-indigo-100 p-4 shrink-0 relative transition-all">
-                    <button id="close-question-btn" class="absolute top-3 right-3 text-indigo-300 hover:text-indigo-600 transition-colors w-6 h-6 flex items-center justify-center rounded-md hover:bg-indigo-100"><i class="fas fa-times"></i></button>
-                    
-                    <div class="flex items-center mb-1.5 pr-8">
-                        <span id="q-diff" class="text-[10px] uppercase font-bold px-2 py-0.5 rounded-md mr-2 tracking-wide"></span>
-                        <h3 id="q-title" class="font-semibold text-indigo-900 text-sm"></h3>
+                <div id="active-question-panel" class="hidden bg-indigo-50/50 border-b border-indigo-100 p-4 shrink-0 relative transition-all" role="region" aria-labelledby="q-title">
+                    <button type="button" id="close-question-btn" class="absolute top-3 right-3 text-indigo-300 hover:text-indigo-600 transition-colors w-8 h-8 flex items-center justify-center rounded-md hover:bg-indigo-100" aria-label="Close challenge"><i class="fas fa-times" aria-hidden="true"></i></button>
+
+                    <div class="flex flex-wrap items-center gap-2 mb-1.5 pr-10">
+                        <span id="q-diff" class="text-[10px] uppercase font-bold px-2 py-0.5 rounded-md tracking-wide"></span>
+                        <h2 id="q-title" class="font-semibold text-indigo-900 text-sm"></h2>
+                        <span id="q-points" class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-amber-100 text-amber-900 border border-amber-200"></span>
                     </div>
                     <p id="q-text" class="text-sm text-indigo-800/80 mb-3 leading-relaxed"></p>
-                    
-                    <button id="show-answer-btn" class="inline-flex items-center text-indigo-600 hover:text-indigo-800 text-xs font-semibold bg-white border border-indigo-200 px-3 py-1.5 rounded shadow-sm hover:shadow transition-all cursor-pointer">
-                        <i class="fas fa-magic mr-1.5 text-indigo-400"></i> Insert Solution
+
+                    <button type="button" id="show-answer-btn" class="inline-flex items-center text-indigo-600 hover:text-indigo-800 text-xs font-semibold bg-white border border-indigo-200 px-3 py-1.5 rounded-lg shadow-sm hover:shadow transition-all cursor-pointer">
+                        <i class="fas fa-magic mr-1.5 text-indigo-400" aria-hidden="true"></i> Insert Solution
                     </button>
                 </div>
 
-                <!-- CodeMirror Container -->
                 <div class="flex-1 relative overflow-hidden bg-white">
-                    <textarea id="sql-editor" class="hidden"></textarea>
+                    <label for="sql-editor" class="sr-only">SQL editor</label>
+                    <textarea id="sql-editor" class="hidden" spellcheck="false" autocomplete="off" aria-describedby="editor-toolbar-label"></textarea>
                 </div>
             </div>
 
-            <!-- Results Bottom Half -->
             <div class="flex-1 flex flex-col min-h-0 bg-white m-4 mt-2 rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                 <div class="px-4 py-2.5 bg-slate-50 border-b border-slate-200 flex justify-between items-center shrink-0">
                     <div class="flex items-center text-slate-700">
-                        <i class="fas fa-table text-slate-400 mr-2 text-sm"></i>
-                        <span class="text-sm font-semibold">Results Output</span>
+                        <i class="fas fa-table text-slate-400 mr-2 text-sm" aria-hidden="true"></i>
+                        <span class="text-sm font-semibold" id="results-heading">Results Output</span>
                     </div>
-                    <span id="row-count" class="text-xs font-medium text-slate-500 bg-slate-200/50 px-2 py-0.5 rounded-md hidden"></span>
+                    <span id="row-count" class="text-xs font-medium text-slate-500 bg-slate-200/50 px-2 py-0.5 rounded-md hidden" aria-live="polite"></span>
                 </div>
-                
-                <div id="results-container" class="flex-1 overflow-auto table-container p-0 relative">
-                    <!-- Empty State -->
-                    <div id="empty-state" class="absolute inset-0 flex flex-col items-center justify-center text-slate-400">
-                        <i class="fas fa-code-branch text-4xl mb-3 text-slate-200"></i>
-                        <p class="text-sm font-medium">Write a query and hit Run</p>
-                        <p class="text-xs mt-1 text-slate-400">Results will appear here</p>
+
+                <div id="grade-feedback" class="hidden px-4 py-2.5 text-sm font-medium border-b flex items-start gap-2 shrink-0" role="status" aria-live="polite"></div>
+
+                <div id="results-container" class="flex-1 overflow-auto table-container p-0 relative" role="region" aria-labelledby="results-heading">
+                    <div id="empty-state" class="absolute inset-0 flex flex-col items-center justify-center text-slate-400 z-0 p-4 text-center">
+                        <i class="fas fa-code-branch text-4xl mb-3 text-slate-200" aria-hidden="true"></i>
+                        <p class="text-sm font-medium">Write a query and choose Run</p>
+                        <p class="text-xs mt-1 text-slate-400">With a challenge open, use <span class="font-mono text-slate-600">Check answer</span> to validate your SQL</p>
                     </div>
+                    <div id="results-output" class="absolute inset-0 overflow-auto z-[1] hidden" role="region" aria-label="Query result grid"></div>
                 </div>
             </div>
 
         </section>
     </main>
 
-    <script>
-        // --- 1. Practice Questions Database ---
-        const practiceQuestions = [
-            { diff: "Easy", title: "All Customers", text: "Write a query to retrieve all columns from the Customer table.", sql: "SELECT * FROM Customer;" },
-            { diff: "Easy", title: "Specific Country", text: "Find the companyName and contactName of all customers located in 'Germany'.", sql: "SELECT companyName, contactName FROM Customer\nWHERE country = 'Germany';" },
-            { diff: "Easy", title: "Counting Products", text: "How many products do we have in total? Return a single column named TotalProducts.", sql: "SELECT COUNT(*) AS TotalProducts FROM Product;" },
-            { diff: "Easy", title: "Employee Locations", text: "List the firstname, lastname, and city of all employees, sorted alphabetically by their lastname.", sql: "SELECT firstname, lastname, city FROM Employee\nORDER BY lastname ASC;" },
-            { diff: "Easy", title: "Discontinued Items", text: "Find all products that have been discontinued (discontinued = '1'). Return the productName.", sql: "SELECT productName FROM Product\nWHERE discontinued = '1';" },
-            { diff: "Easy", title: "All Shippers", text: "Retrieve all information about all shipping companies in the database.", sql: "SELECT * FROM Shipper;" },
-            { diff: "Easy", title: "Sales Representatives", text: "Find the firstname, lastname, and title of all employees who are a 'Sales Representative'.", sql: "SELECT firstname, lastname, title FROM Employee\nWHERE title = 'Sales Representative';" },
-            { diff: "Easy", title: "London Customers", text: "List the companyName, contactName, and city of all customers located in 'London'.", sql: "SELECT companyName, contactName, city FROM Customer\nWHERE city = 'London';" },
-            { diff: "Easy", title: "Expensive Products", text: "Find the productName and unitPrice of all products that cost more than $50.00.", sql: "SELECT productName, unitPrice FROM Product\nWHERE unitPrice > 50.00;" },
-            { diff: "Easy", title: "Supplier Phonebook", text: "Create a phonebook of suppliers by listing their companyName and phone number.", sql: "SELECT companyName, phone FROM Supplier;" },
-            
-            { diff: "Medium", title: "Needs Reordering", text: "Find products that are low in stock. Return productName and unitsInStock where unitsInStock is less than the reorderLevel.", sql: "SELECT productName, unitsInStock, reorderLevel FROM Product\nWHERE unitsInStock < reorderLevel;" },
-            { diff: "Medium", title: "Customer & Order Match", text: "List every order's entityId along with the companyName of the customer who placed it. (Requires joining SalesOrder and Customer).", sql: "SELECT o.entityId AS OrderId, c.companyName \nFROM SalesOrder o\nJOIN Customer c ON o.customerId = c.entityId;" },
-            { diff: "Medium", title: "Freight Costs", text: "Calculate the total amount of freight paid for all orders sent to 'France'.", sql: "SELECT SUM(freight) AS TotalFreightToFrance \nFROM SalesOrder\nWHERE shipCountry = 'France';" },
-            { diff: "Medium", title: "Products by Category", text: "List categoryName and the number of products in each category. (Requires joining Category and Product, and GROUP BY).", sql: "SELECT c.categoryName, COUNT(p.entityId) as ProductCount\nFROM Category c\nJOIN Product p ON c.entityId = p.categoryId\nGROUP BY c.categoryName;" },
-            { diff: "Medium", title: "Never Ordered", text: "Find customers who have never placed an order. Return their entityId and companyName.", sql: "SELECT c.entityId, c.companyName\nFROM Customer c\nLEFT JOIN SalesOrder o ON c.entityId = o.customerId\nWHERE o.entityId IS NULL;" },
-            { diff: "Medium", title: "Inventory Value", text: "Calculate the total inventory value for each product. Return productName and InventoryValue (unitPrice * unitsInStock).", sql: "SELECT productName, (unitPrice * unitsInStock) AS InventoryValue\nFROM Product;" },
-            { diff: "Medium", title: "Average Price per Category", text: "Find the average unitPrice of products in each category. Return categoryName and AveragePrice.", sql: "SELECT c.categoryName, AVG(p.unitPrice) AS AveragePrice\nFROM Category c\nJOIN Product p ON c.entityId = p.categoryId\nGROUP BY c.categoryName;" },
-            { diff: "Medium", title: "Orders in 1997", text: "Find all orders placed in the year 1997. Return the entityId and orderDate.", sql: "SELECT entityId, orderDate \nFROM SalesOrder \nWHERE orderDate LIKE '1997%';" },
-            { diff: "Medium", title: "Employee Territories", text: "List the firstname and lastname of employees alongside the territorydescription of their assigned territories.", sql: "SELECT e.firstname, e.lastname, t.territorydescription \nFROM Employee e \nJOIN EmployeeTerritory et ON e.entityId = et.employeeId \nJOIN Territory t ON et.territoryCode = t.territoryCode;" },
-            { diff: "Medium", title: "Customer Managers", text: "List all customers who have the word 'Manager' anywhere in their contactTitle.", sql: "SELECT companyName, contactTitle \nFROM Customer \nWHERE contactTitle LIKE '%Manager%';" },
-            
-            { diff: "Hard", title: "High Value Orders", text: "Find all Orders that had a total value (unitPrice * quantity) greater than $10,000. Ignore discounts for this calculation.", sql: "SELECT orderId, SUM(unitPrice * quantity) AS OrderTotal\nFROM OrderDetail\nGROUP BY orderId\nHAVING SUM(unitPrice * quantity) > 10000;" },
-            { diff: "Hard", title: "Top 5 Employees", text: "Who are the top 5 employees by total number of orders processed? Return firstname, lastname, and TotalOrders.", sql: "SELECT e.firstname, e.lastname, COUNT(o.entityId) AS TotalOrders\nFROM Employee e\nJOIN SalesOrder o ON e.entityId = o.employeeId\nGROUP BY e.entityId\nORDER BY TotalOrders DESC\nLIMIT 5;" },
-            { diff: "Hard", title: "Revenue by Category", text: "Calculate the total gross revenue (unitPrice * quantity) generated by each Product Category. Sort by highest revenue first.", sql: "SELECT c.categoryName, SUM(od.unitPrice * od.quantity) as TotalRevenue\nFROM Category c\nJOIN Product p ON c.entityId = p.categoryId\nJOIN OrderDetail od ON p.entityId = od.productId\nGROUP BY c.categoryName\nORDER BY TotalRevenue DESC;" },
-            { diff: "Hard", title: "Late Shipments", text: "Find orders that were shipped after their requiredDate. Return the order's entityId, orderDate, requiredDate, and shippedDate.", sql: "SELECT entityId AS OrderId, orderDate, requiredDate, shippedDate\nFROM SalesOrder\nWHERE shippedDate > requiredDate;" },
-            { diff: "Hard", title: "VIP Customers", text: "Find the total amount of money spent by 'QUICK-Stop' (companyName: QUICK-Stop). Include discount calculation: unitPrice * quantity * (1 - discount).", sql: "SELECT c.companyName, SUM(od.unitPrice * od.quantity * (1 - od.discount)) AS TotalSpent\nFROM Customer c\nJOIN SalesOrder o ON c.entityId = o.customerId\nJOIN OrderDetail od ON o.entityId = od.orderId\nWHERE c.companyName = 'QUICK-Stop'\nGROUP BY c.companyName;" },
-            { diff: "Hard", title: "Top 3 Customers", text: "Find the top 3 customers by total amount spent (ignoring discounts). Return companyName and TotalSpent.", sql: "SELECT c.companyName, SUM(od.unitPrice * od.quantity) AS TotalSpent \nFROM Customer c \nJOIN SalesOrder o ON c.entityId = o.customerId \nJOIN OrderDetail od ON o.entityId = od.orderId \nGROUP BY c.companyName \nORDER BY TotalSpent DESC \nLIMIT 3;" },
-            { diff: "Hard", title: "Most Popular Product", text: "Find the single product that has been ordered the most in terms of total quantity. Return productName and TotalQuantity.", sql: "SELECT p.productName, SUM(od.quantity) AS TotalQuantity \nFROM Product p \nJOIN OrderDetail od ON p.entityId = od.productId \nGROUP BY p.productName \nORDER BY TotalQuantity DESC \nLIMIT 1;" },
-            { diff: "Hard", title: "Managers & Direct Reports", text: "List each employee's firstname and lastname along with their manager's firstname and lastname (requires a self-join).", sql: "SELECT e1.firstname AS EmployeeFirst, e1.lastname AS EmployeeLast, e2.firstname AS ManagerFirst, e2.lastname AS ManagerLast \nFROM Employee e1 \nJOIN Employee e2 ON e1.mgrId = e2.entityId;" },
-            { diff: "Hard", title: "Products Never Ordered", text: "Find products that have never been included in any order. Return entityId and productName.", sql: "SELECT p.entityId, p.productName \nFROM Product p \nLEFT JOIN OrderDetail od ON p.entityId = od.productId \nWHERE od.entityId IS NULL;" },
-            { diff: "Hard", title: "Orders with Multiple Items", text: "Find orders that contain more than 5 different unique products. Return the orderId and the count of unique products.", sql: "SELECT orderId, COUNT(productId) AS ProductCount \nFROM OrderDetail \nGROUP BY orderId \nHAVING COUNT(productId) > 5;" },
-            
-            { diff: "Super Hard", title: "Sales Leaderboard", text: "Rank employees by their total sales revenue (including discounts). Return firstname, lastname, TotalSales, and their SalesRank.", sql: "SELECT e.firstname, e.lastname, SUM(od.unitPrice * od.quantity * (1 - od.discount)) AS TotalSales, RANK() OVER(ORDER BY SUM(od.unitPrice * od.quantity * (1 - od.discount)) DESC) as SalesRank FROM Employee e JOIN SalesOrder o ON e.entityId = o.employeeId JOIN OrderDetail od ON o.entityId = od.orderId GROUP BY e.entityId;" },
-            { diff: "Super Hard", title: "Most Diverse Buyer", text: "Find the customer who has purchased the highest number of *unique* products. Return companyName and UniqueProducts.", sql: "SELECT c.companyName, COUNT(DISTINCT od.productId) as UniqueProducts FROM Customer c JOIN SalesOrder o ON c.entityId = o.customerId JOIN OrderDetail od ON o.entityId = od.orderId GROUP BY c.entityId ORDER BY UniqueProducts DESC LIMIT 1;" },
-            { diff: "Super Hard", title: "Above Category Average", text: "Find products that are priced higher than the average price of all products in their own category. Return productName, unitPrice, and categoryName.", sql: "SELECT p1.productName, p1.unitPrice, c.categoryName FROM Product p1 JOIN Category c ON p1.categoryId = c.entityId WHERE p1.unitPrice > (SELECT AVG(p2.unitPrice) FROM Product p2 WHERE p2.categoryId = p1.categoryId);" },
-            { diff: "Super Hard", title: "Running Total Freight", text: "Calculate the running total of freight costs for orders placed by the employee with entityId = 1, ordered by orderDate.", sql: "SELECT entityId AS OrderId, orderDate, freight, SUM(freight) OVER(ORDER BY orderDate) as RunningTotal FROM SalesOrder WHERE employeeId = 1;" },
-            { diff: "Super Hard", title: "Employees and Managers", text: "For each employee, return their full name, the total number of orders they processed, and their manager's full name. Include employees without managers.", sql: "SELECT e.firstname || ' ' || e.lastname AS Employee, COUNT(o.entityId) AS TotalOrders, m.firstname || ' ' || m.lastname AS Manager FROM Employee e LEFT JOIN Employee m ON e.mgrId = m.entityId LEFT JOIN SalesOrder o ON e.entityId = o.employeeId GROUP BY e.entityId;" },
-            { diff: "Super Hard", title: "Seafood Haters", text: "Find all customers who have *never* ordered a product from the 'Seafood' category. Return entityId and companyName.", sql: "SELECT entityId, companyName FROM Customer WHERE entityId NOT IN (SELECT o.customerId FROM SalesOrder o JOIN OrderDetail od ON o.entityId = od.orderId JOIN Product p ON od.productId = p.entityId JOIN Category c ON p.categoryId = c.entityId WHERE c.categoryName = 'Seafood');" },
-            { diff: "Super Hard", title: "Whale Customers", text: "Identify customers whose average order value is more than double the overall average order value across all customers. Return companyName and CustAvg.", sql: "WITH OrderTotals AS (SELECT orderId, SUM(unitPrice * quantity * (1-discount)) as OrderValue FROM OrderDetail GROUP BY orderId), OverallAvg AS (SELECT AVG(OrderValue) as AvgVal FROM OrderTotals), CustomerAvg AS (SELECT o.customerId, c.companyName, AVG(ot.OrderValue) as CustAvg FROM SalesOrder o JOIN OrderTotals ot ON o.entityId = ot.orderId JOIN Customer c ON o.customerId = c.entityId GROUP BY o.customerId) SELECT companyName, CustAvg FROM CustomerAvg CROSS JOIN OverallAvg WHERE CustAvg > 2 * AvgVal;" },
-            { diff: "Super Hard", title: "Price Quartiles", text: "Divide all products into 4 quartiles based on their unitPrice using a window function. Return productName, unitPrice, and PriceQuartile.", sql: "SELECT productName, unitPrice, NTILE(4) OVER (ORDER BY unitPrice ASC) as PriceQuartile FROM Product;" },
-            { diff: "Super Hard", title: "Top Territories", text: "Find the top 3 territories with the highest total sales revenue. Return territorydescription and TotalSales.", sql: "SELECT t.territorydescription, SUM(od.unitPrice * od.quantity * (1-discount)) as TotalSales FROM Territory t JOIN EmployeeTerritory et ON t.territoryCode = et.territoryCode JOIN SalesOrder o ON et.employeeId = o.employeeId JOIN OrderDetail od ON o.entityId = od.orderId GROUP BY t.territoryCode ORDER BY TotalSales DESC LIMIT 3;" },
-            { diff: "Super Hard", title: "Time Between Orders", text: "Use a window function to show the current orderDate and the previous orderDate for the customer with entityId = 1.", sql: "SELECT entityId as OrderId, orderDate as CurrentOrderDate, LAG(orderDate) OVER (ORDER BY orderDate) as PreviousOrderDate FROM SalesOrder WHERE customerId = 1;" }
-        ];
-
-        let activeQuestionIndex = null;
-
-        // --- 2. Global Variables & Application State ---
-        let db = null;
-        let schemaDocs = [];
-        
-        // Initialize CodeMirror Editor
-        const editorTextArea = document.getElementById('sql-editor');
-        const editor = CodeMirror.fromTextArea(editorTextArea, {
-            mode: 'text/x-sql',
-            theme: 'idea', // Clean light theme
-            lineNumbers: true,
-            indentUnit: 4,
-            matchBrackets: true,
-            extraKeys: {
-                "Ctrl-Enter": function(cm) { executeQuery(); },
-                "Cmd-Enter": function(cm) { executeQuery(); }
-            }
-        });
-
-        const runBtn = document.getElementById('run-btn');
-        const resultsContainer = document.getElementById('results-container');
-        const rowCountEl = document.getElementById('row-count');
-        const statusEl = document.getElementById('status');
-        const schemaContainer = document.getElementById('schema-container');
-        const practiceContainer = document.getElementById('practice-container');
-        const practiceTabWrapper = document.getElementById('practice-tab-wrapper');
-        const emptyStateEl = document.getElementById('empty-state');
-        
-        // Tab elements
-        const tabSchemaBtn = document.getElementById('tab-schema-btn');
-        const tabPracticeBtn = document.getElementById('tab-practice-btn');
-
-        // Question Panel elements
-        const qPanel = document.getElementById('active-question-panel');
-        const qDiff = document.getElementById('q-diff');
-        const qTitle = document.getElementById('q-title');
-        const qText = document.getElementById('q-text');
-        const showAnswerBtn = document.getElementById('show-answer-btn');
-        const closeQuestionBtn = document.getElementById('close-question-btn');
-
-        // Initial default query
-        editor.setValue("-- Welcome to Northwind SQL Academy!\n" +
-                       "-- 1. Explore the schema on the left.\n" +
-                       "-- 2. Switch to the 'Practice' tab to try challenges.\n" +
-                       "SELECT * FROM Customer LIMIT 10;");
-
-        // --- 3. Dynamic Schema Extraction ---
-        function extractSchemaFromDB() {
-            const schema = [];
-            try {
-                const tablesRes = db.exec("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name;");
-                if (tablesRes.length > 0) {
-                    const tables = tablesRes[0].values.map(v => v[0]);
-                    tables.forEach(table => {
-                        const colsRes = db.exec(`PRAGMA table_info("${table}");`);
-                        if (colsRes.length > 0) {
-                            const cols = colsRes[0].values.map(v => v[1]);
-                            schema.push({ table, cols });
-                        }
-                    });
-                }
-            } catch (err) {
-                console.error("Error extracting schema:", err);
-            }
-            return schema;
-        }
-
-        // --- 4. UI Rendering Functions ---
-        function renderSchema() {
-            schemaContainer.innerHTML = schemaDocs.map(item => `
-                <div class="mb-5">
-                    <div class="font-semibold text-slate-800 cursor-pointer hover:text-indigo-600 flex items-center group transition-colors" onclick="insertTableName('${item.table}')">
-                        <i class="fas fa-table text-slate-300 mr-2 text-xs group-hover:text-indigo-400 transition-colors"></i> ${item.table}
-                    </div>
-                    <div class="pl-5 mt-1.5 space-y-1">
-                        ${item.cols.map(col => `
-                            <div class="cursor-pointer text-slate-500 hover:text-indigo-500 hover:bg-indigo-50/50 rounded px-1.5 py-0.5 -ml-1.5 transition-colors flex items-center" onclick="insertColName('${col}')">
-                                <span class="w-1 h-1 bg-slate-200 rounded-full mr-2"></span>${col}
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function renderPracticeSets() {
-            const searchTerm = document.getElementById('practice-search').value.toLowerCase();
-            const diffFilter = document.getElementById('practice-diff-filter').value;
-
-            practiceContainer.innerHTML = practiceQuestions.map((q, idx) => {
-                if (diffFilter !== 'All' && q.diff !== diffFilter) return '';
-                if (searchTerm && !q.title.toLowerCase().includes(searchTerm) && !q.text.toLowerCase().includes(searchTerm)) return '';
-
-                let diffClass = '';
-                if (q.diff === 'Easy') diffClass = 'bg-emerald-100 text-emerald-800 border-emerald-200';
-                if (q.diff === 'Medium') diffClass = 'bg-amber-100 text-amber-800 border-amber-200';
-                if (q.diff === 'Hard') diffClass = 'bg-rose-100 text-rose-800 border-rose-200';
-                if (q.diff === 'Super Hard') diffClass = 'bg-purple-100 text-purple-800 border-purple-200';
-
-                return `
-                <div class="p-3.5 bg-white border border-slate-200 rounded-xl hover:border-indigo-300 hover:shadow-md cursor-pointer transition-all group" onclick="loadQuestion(${idx})">
-                    <div class="flex items-center mb-1.5">
-                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-md mr-2 uppercase tracking-wider ${diffClass}">${q.diff}</span>
-                        <span class="font-semibold text-slate-800 text-sm group-hover:text-indigo-700 transition-colors">${q.title}</span>
-                    </div>
-                    <div class="text-xs text-slate-500 line-clamp-2 leading-relaxed">${q.text}</div>
-                </div>
-                `;
-            }).join('');
-        }
-
-        function loadQuestion(index) {
-            activeQuestionIndex = index;
-            const q = practiceQuestions[index];
-            
-            qDiff.className = 'text-[10px] uppercase font-bold px-2 py-0.5 rounded-md mr-2 tracking-wide ';
-            if (q.diff === 'Easy') qDiff.className += 'bg-emerald-200 text-emerald-900';
-            if (q.diff === 'Medium') qDiff.className += 'bg-amber-200 text-amber-900';
-            if (q.diff === 'Hard') qDiff.className += 'bg-rose-200 text-rose-900';
-            if (q.diff === 'Super Hard') qDiff.className += 'bg-purple-200 text-purple-900';
-
-            qDiff.innerText = q.diff;
-            qTitle.innerText = q.title;
-            qText.innerText = q.text;
-            
-            qPanel.classList.remove('hidden');
-            
-            editor.setValue(`-- Practice: ${q.title}\n\n`);
-            editor.focus();
-        }
-
-        function insertTableName(name) {
-            const safeName = name.includes(' ') ? `"${name}"` : name;
-            editor.setValue(`SELECT * FROM ${safeName} LIMIT 10;`);
-            editor.focus();
-        }
-
-        function insertColName(name) {
-            const safeName = name.includes(' ') ? `"${name}"` : name;
-            editor.replaceSelection(safeName);
-            editor.focus();
-        }
-
-        function executeQuery() {
-            if (!db) return;
-            const query = editor.getValue().trim();
-            if (!query) return;
-
-            emptyStateEl.style.display = 'none';
-
-            try {
-                const res = db.exec(query);
-                rowCountEl.classList.remove('hidden');
-
-                if (res.length === 0) {
-                    rowCountEl.innerText = "0 rows";
-                    resultsContainer.innerHTML = `
-                        <div class="m-4 p-4 bg-emerald-50 rounded-lg border border-emerald-100 flex items-start text-emerald-800">
-                            <i class="fas fa-check-circle mt-0.5 mr-3 text-emerald-500"></i>
-                            <div>
-                                <h4 class="text-sm font-semibold">Success</h4>
-                                <p class="text-xs mt-0.5 opacity-80">Query executed successfully. No rows to display.</p>
-                            </div>
-                        </div>`;
-                    return;
-                }
-
-                const columns = res[0].columns;
-                const values = res[0].values;
-                rowCountEl.innerText = `${values.length} row${values.length !== 1 ? 's' : ''}`;
-
-                let tableHTML = '<table><thead><tr>';
-                columns.forEach(col => { tableHTML += `<th>${escapeHtml(col)}</th>`; });
-                tableHTML += '</tr></thead><tbody>';
-
-                values.forEach(row => {
-                    tableHTML += '<tr>';
-                    row.forEach(val => {
-                        tableHTML += `<td>${val === null ? '<span class="text-slate-400 italic text-xs">null</span>' : escapeHtml(String(val))}</td>`;
-                    });
-                    tableHTML += '</tr>';
-                });
-                tableHTML += '</tbody></table>';
-                resultsContainer.innerHTML = tableHTML;
-
-            } catch (error) {
-                rowCountEl.classList.remove('hidden');
-                rowCountEl.innerText = "Error";
-                resultsContainer.innerHTML = `
-                    <div class="m-4 p-4 bg-rose-50 text-rose-800 rounded-lg border border-rose-100 flex items-start">
-                        <i class="fas fa-exclamation-triangle mt-0.5 mr-3 text-rose-500"></i>
-                        <div>
-                            <h4 class="text-sm font-semibold">SQL Error</h4>
-                            <p class="font-mono text-xs mt-1.5 text-rose-600/90 whitespace-pre-wrap">${escapeHtml(error.message)}</p>
-                        </div>
-                    </div>
-                `;
-            }
-        }
-
-        function escapeHtml(unsafe) {
-            return String(unsafe)
-                 .replace(/&/g, "&amp;")
-                 .replace(/</g, "&lt;")
-                 .replace(/>/g, "&gt;")
-                 .replace(/"/g, "&quot;")
-                 .replace(/'/g, "&#039;");
-        }
-
-        // --- 5. Initialization & Data Fetching ---
-        runBtn.disabled = true;
-
-        const config = { locateFile: filename => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${filename}` };
-
-        initSqlJs(config).then(async function(SQL) {
-            db = new SQL.Database();
-            try {
-                statusEl.innerHTML = `<i class="fas fa-cloud-download-alt animate-bounce text-indigo-400"></i><span>Fetching DB...</span>`;
-                const rawGithubUrl = 'https://raw.githubusercontent.com/sealbro/northwind/7ad6343736db7dd510298500ccb3bad110db438f/sqlite/northwind_core.sql';
-                const response = await fetch(rawGithubUrl);
-                
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                const sqlText = await response.text();
-                statusEl.innerHTML = `<i class="fas fa-cog fa-spin text-indigo-400"></i><span>Building Engine...</span>`;
-                
-                setTimeout(() => {
-                    try {
-                        db.run(sqlText);
-                        schemaDocs = extractSchemaFromDB();
-                        
-                        statusEl.innerHTML = `<i class="fas fa-check-circle text-emerald-400"></i><span>System Ready</span>`;
-                        statusEl.classList.replace('bg-slate-800', 'bg-slate-800/80');
-                        statusEl.classList.replace('border-slate-700', 'border-emerald-500/30');
-                        runBtn.disabled = false;
-                        
-                        renderSchema();
-                        renderPracticeSets();
-                        // executeQuery(); // Commented out to show the new empty state on load
-                    } catch (err) {
-                        statusEl.innerHTML = `<i class="fas fa-times-circle text-rose-400"></i><span>Build Failed</span>`;
-                        statusEl.classList.replace('border-slate-700', 'border-rose-500/30');
-                    }
-                }, 50);
-
-            } catch (err) {
-                statusEl.innerHTML = `<i class="fas fa-times-circle text-rose-400"></i><span>Network Error</span>`;
-                statusEl.classList.replace('border-slate-700', 'border-rose-500/30');
-            }
-        });
-
-        // --- 6. Event Listeners ---
-        runBtn.addEventListener('click', executeQuery);
-        
-        // Tab Switching
-        tabSchemaBtn.addEventListener('click', () => {
-            tabSchemaBtn.classList.add('tab-active', 'shadow-sm');
-            tabPracticeBtn.classList.remove('tab-active', 'shadow-sm');
-            schemaContainer.classList.remove('hidden');
-            practiceTabWrapper.classList.add('hidden');
-            practiceTabWrapper.classList.remove('flex');
-        });
-
-        tabPracticeBtn.addEventListener('click', () => {
-            tabPracticeBtn.classList.add('tab-active', 'shadow-sm');
-            tabSchemaBtn.classList.remove('tab-active', 'shadow-sm');
-            practiceTabWrapper.classList.remove('hidden');
-            practiceTabWrapper.classList.add('flex');
-            schemaContainer.classList.add('hidden');
-        });
-
-        // Filter Listeners
-        document.getElementById('practice-search').addEventListener('input', renderPracticeSets);
-        document.getElementById('practice-diff-filter').addEventListener('change', renderPracticeSets);
-
-        // Question Panel Listeners
-        closeQuestionBtn.addEventListener('click', () => {
-            qPanel.classList.add('hidden');
-            activeQuestionIndex = null;
-        });
-
-        showAnswerBtn.addEventListener('click', () => {
-            if (activeQuestionIndex !== null) {
-                const q = practiceQuestions[activeQuestionIndex];
-                editor.setValue(`-- Solution for: ${q.title}\n${q.sql}`);
-                executeQuery();
-            }
-        });
-
-    </script>
+    <script src="js/practice-data.js"></script>
+    <script src="js/seo.js"></script>
+    <script src="js/app.js"></script>
 </body>
 </html>
